@@ -17,12 +17,13 @@ export function deckFor(progress, lang, dir) {
 export function grade(deck, id, ok, { retry = false, now = Date.now() } = {}) {
   const c = (deck[id] ||= { b: 0, due: now, r: 0, w: 0 });
   if (retry) {
-    if (ok) c.due = now + 4 * 36e5; // got it on the retry: see it again in a few hours
+    c.due = now + (ok ? 4 * 36e5 : 20 * 6e4); // fixed on retry: a few hours; still wrong: 20 minutes
     return c;
   }
   if (ok) { c.r++; c.b = Math.min(Math.max(c.b + 1, 2), 6); }
   else { c.w++; c.b = 1; }
-  c.due = now + INTERVAL_DAYS[c.b] * DAY;
+  // Missed words are already repeated later in the same session, so give them a short break after it.
+  c.due = ok ? now + INTERVAL_DAYS[c.b] * DAY : now + 20 * 6e4;
   return c;
 }
 
@@ -56,11 +57,19 @@ export const shuffle = a => {
   return a;
 };
 
-/** Pick words for a session: due reviews first, then new words, then early reviews. */
+/**
+ * Pick words for a session: due reviews, then new words, then early reviews.
+ * Reviews fill at most half the session while new words remain, so playing
+ * back-to-back doesn't repeat the same words. New words are drawn at random
+ * from the earliest unseen ones, so basics still come first but each session differs.
+ */
 export function buildSession(deck, pool, n, now = Date.now()) {
+  const unseen = pool.filter(w => !deck[w.id]);
+  const reviewCap = unseen.length ? Math.ceil(n / 2) : n;
   const due = pool.filter(w => deck[w.id] && deck[w.id].due <= now)
-    .sort((a, b) => deck[a.id].due - deck[b.id].due).slice(0, n);
-  const fresh = pool.filter(w => !deck[w.id]).slice(0, n - due.length);
+    .sort((a, b) => deck[a.id].due - deck[b.id].due).slice(0, reviewCap);
+  const window = unseen.slice(0, Math.max(n * 4, 80));
+  const fresh = shuffle(window).slice(0, n - due.length);
   let picked = [...due, ...fresh];
   if (picked.length < n) {
     const ids = new Set(picked.map(w => w.id));

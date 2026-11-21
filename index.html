@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131313" media="(prefers-color-scheme: dark)">
+  <title>Wordwise</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231f5f57%22/%3E%3Ctext x=%2232%22 y=%2244%22 font-family=%22Georgia,serif%22 font-size=%2236%22 text-anchor=%22middle%22 fill=%22white%22%3EW%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-gear" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path fill="currentColor" d="M4 9.5h3.2L12 5.6v12.8l-4.8-3.9H4z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path fill="currentColor" d="M12.6 2.5c.4 3-1.2 4.6-2.7 6.1C8.4 10.1 7 11.6 7 14.3A5 5 0 0 0 12 19.5a5 5 0 0 0 5-5.2c0-2-.9-3.4-1.8-4.6-.2 1.3-.8 2.2-1.8 2.7.4-3.6-.3-7.3-.8-9.9Z"/></symbol>
+  </svg>
+
+  <main class="app">
+    <!-- HOME -->
+    <section class="view" id="home">
+      <header class="topbar">
+        <div class="brand">wordwise</div>
+        <button class="icon-btn" id="openSettings" aria-label="Settings"><svg><use href="#i-gear"/></svg></button>
+      </header>
+
+      <nav class="langs" id="langs" aria-label="Language"></nav>
+
+      <div class="seg" id="dirSeg" role="radiogroup" aria-label="Direction"></div>
+
+      <div class="card stats-card">
+        <div class="ring-wrap">
+          <svg class="ring" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="27" class="ring-bg"/>
+            <circle cx="32" cy="32" r="27" class="ring-fg" id="ringFg"/>
+          </svg>
+          <div class="ring-label"><b id="ringPct">0%</b></div>
+        </div>
+        <div class="stats">
+          <div><b id="statLearned">0</b><span>learned</span></div>
+          <div><b id="statDue">0</b><span>to review</span></div>
+          <div><b id="statStreak">0</b><span class="with-icon"><svg class="flame"><use href="#i-flame"/></svg>streak</span></div>
+        </div>
+      </div>
+
+      <div class="label">Mode</div>
+      <div class="modes" id="modes" role="radiogroup" aria-label="Mode">
+        <button class="mode" data-mode="choice" role="radio">
+          <span class="mode-title">Multiple choice</span>
+          <span class="mode-sub">Pick the right translation</span>
+        </button>
+        <button class="mode" data-mode="type" role="radio">
+          <span class="mode-title">Typing</span>
+          <span class="mode-sub">Write it from memory</span>
+        </button>
+        <button class="mode" data-mode="sprint" role="radio">
+          <span class="mode-title">Sprint</span>
+          <span class="mode-sub" id="sprintSub">60 seconds, build a streak</span>
+        </button>
+      </div>
+
+      <button class="row-btn" id="openTopics">
+        <span class="label inline">Topic</span>
+        <span class="row-value" id="topicName">All topics</span>
+        <svg class="chev"><use href="#i-chev"/></svg>
+      </button>
+
+      <div class="start-wrap">
+        <button class="btn primary big" id="startBtn">Start</button>
+        <div class="start-hint" id="startHint"></div>
+      </div>
+    </section>
+
+    <!-- TOPICS -->
+    <section class="view" id="topics" hidden>
+      <header class="topbar">
+        <button class="icon-btn" data-back aria-label="Back"><svg><use href="#i-back"/></svg></button>
+        <div class="title">Topics</div>
+        <span class="icon-btn ghost-space"></span>
+      </header>
+      <div class="topic-list" id="topicList"></div>
+    </section>
+
+    <!-- PLAY -->
+    <section class="view play" id="play" hidden>
+      <header class="play-top">
+        <button class="icon-btn" id="quitBtn" aria-label="End session"><svg><use href="#i-x"/></svg></button>
+        <div class="bar"><i id="barFill"></i></div>
+        <div class="combo" id="combo"></div>
+      </header>
+
+      <div class="prompt-area">
+        <div class="eyebrow" id="pTopic"></div>
+        <div class="prompt" id="pWord"></div>
+        <div class="psub" id="pSub"></div>
+        <button class="speak" id="pSpeak" aria-label="Play pronunciation" hidden><svg><use href="#i-sound"/></svg></button>
+      </div>
+
+      <div class="choices" id="choices"></div>
+
+      <form class="typeform" id="typeForm" hidden autocomplete="off">
+        <input id="typeInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Your answer">
+        <div class="type-actions">
+          <button type="button" class="btn ghost" id="dontKnow">I don't know</button>
+          <button type="submit" class="btn primary">Check</button>
+        </div>
+      </form>
+
+      <div class="feedback" id="feedback" hidden aria-live="polite">
+        <div class="fb-inner">
+          <div class="fb-head" id="fbHead"></div>
+          <div class="fb-answer-row">
+            <div class="fb-answer" id="fbAnswer"></div>
+            <button class="speak small" id="fbSpeak" aria-label="Play pronunciation" hidden><svg><use href="#i-sound"/></svg></button>
+          </div>
+          <div class="fb-extra" id="fbExtra"></div>
+          <button class="btn" id="fbContinue">Continue</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="view" id="results" hidden>
+      <div class="results-head">
+        <div class="eyebrow" id="rEyebrow">Session complete</div>
+        <div class="big-number" id="rBig">0%</div>
+        <div class="r-sub" id="rSub"></div>
+      </div>
+      <div class="card r-stats" id="rStats"></div>
+      <div class="label" id="rMissLabel">To practise</div>
+      <div class="miss-list" id="rMiss"></div>
+      <div class="r-actions">
+        <button class="btn" id="rRetry">Practise these</button>
+        <button class="btn primary" id="rDone">Done</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- SETTINGS -->
+  <dialog id="settings" aria-label="Settings">
+    <div class="sheet">
+      <div class="sheet-head">
+        <div class="title">Settings</div>
+        <button class="icon-btn" id="closeSettings" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+      </div>
+      <div class="set-row">
+        <div><div class="set-title">Session length</div><div class="set-sub">Words per session</div></div>
+        <div class="seg small" id="lenSeg"></div>
+      </div>
+      <label class="set-row">
+        <div><div class="set-title">Auto-play pronunciation</div><div class="set-sub">Speak each word aloud</div></div>
+        <input type="checkbox" class="switch" id="setAudio">
+      </label>
+      <label class="set-row">
+        <div><div class="set-title">Hebrew transliteration</div><div class="set-sub">Show how Hebrew words sound in Latin letters</div></div>
+        <input type="checkbox" class="switch" id="setTranslit">
+      </label>
+      <label class="set-row">
+        <div><div class="set-title">Strict accents</div><div class="set-sub">In typing mode, count missing accents (é, ñ, ą…) as wrong</div></div>
+        <input type="checkbox" class="switch" id="setStrict">
+      </label>
+      <div class="set-row">
+        <div><div class="set-title">Reset progress</div><div class="set-sub" id="resetSub">Clears progress for this language</div></div>
+        <button class="btn danger small" id="resetBtn">Reset</button>
+      </div>
+      <p class="voice-note" id="voiceNote"></p>
+    </div>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

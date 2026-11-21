@@ -1,0 +1,18 @@
+import { checkTyped } from '../js/check.js';
+const t = (inp, targets, lang, opt, want) => { const r = checkTyped(inp, targets, lang, opt); const pass = r.ok === want[0] && r.kind === want[1]; console.log(pass ? 'ok  ' : 'FAIL', JSON.stringify(inp), '->', r.kind, r.ok); if (!pass) process.exitCode = 1; };
+t('pomme', ['la pomme'], 'fr', {}, [true, 'exact']);
+t("L’œil", ["l'œil"], 'fr', {}, [true, 'exact']);
+t('cafe', ['le café'], 'fr', {}, [true, 'accents']);
+t('cafe', ['le café'], 'fr', { strict: true }, [false, 'accents']);
+t('zrobic', ['robić', 'zrobić'], 'pl', {}, [true, 'accents']);
+t('manzna', ['la manzana'], 'es', {}, [true, 'typo']);
+t('perro', ['el gato'], 'es', {}, [false, 'wrong']);
+t('¿Cómo estás?', ['¿cómo estás?'], 'es', {}, [true, 'exact']);
+t('to swim', ['to swim'], 'en', {}, [true, 'exact']);
+t('swim', ['to swim'], 'en', {}, [true, 'exact']);
+t('שלום', ['שלום'], 'he', {}, [true, 'exact']);
+t('תפוח', ['תפוח'], 'he', {}, [true, 'exact']);
+t('tapuach', ['תפוח'], 'he', { translits: ['tapuakh'] }, [true, 'translit']);
+t('lehitraot', ['להתראות'], 'he', { translits: ["lehitraot"] }, [true, 'translit']);
+t('shalom', ['כלב'], 'he', { translits: ['kelev'] }, [false, 'wrong']);
+t('', ['x'], 'fr', {}, [false, 'empty']);
